@@ -1,0 +1,19 @@
+/* ==========================================================================
+   Main Application Styles
+   Imal Ravindu Bandara — Portfolio
+   ========================================================================== */
+
+.App {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000;
+  color: #FFFFFF;
+  overflow-x: hidden;
+}
+
+/* Section Smooth Flow */
+section {
+  position: relative;
+  width: 100%;
+}

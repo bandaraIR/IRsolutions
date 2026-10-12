@@ -1,0 +1,300 @@
+/* Top scroll indicator */
+.scroll-progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #FF6A00, #FF9E4A);
+  box-shadow: 0 0 12px rgba(255, 106, 0, 0.8), 0 0 24px rgba(255, 106, 0, 0.4);
+  z-index: 10000;
+  transition: width 0.08s ease-out;
+}
+
+/* Nav Header Container */
+.apple-nav-header {
+  position: fixed;
+  top: 18px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9990;
+  pointer-events: none;
+  padding: 0 16px;
+  transition: transform 0.3s ease;
+}
+
+/* Capsule Bar */
+.apple-nav-capsule {
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 8px 14px 8px 18px;
+  background: rgba(14, 14, 18, 0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 106, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 900px;
+  width: 100%;
+}
+
+.apple-nav-header.scrolled .apple-nav-capsule {
+  background: rgba(10, 10, 14, 0.85);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 106, 0, 0.12);
+}
+
+/* Logo */
+.nav-logo-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #FFFFFF;
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: 999px;
+  transition: opacity 0.2s ease;
+}
+
+.nav-logo-btn:hover {
+  opacity: 0.85;
+}
+
+.logo-monogram {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFFFFF 60%, rgba(255,255,255,0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  box-shadow: 0 0 8px var(--accent-orange);
+  display: inline-block;
+}
+
+.logo-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-gray-400);
+  letter-spacing: -0.01em;
+}
+
+/* Nav links */
+.nav-links-cluster {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-capsule-link {
+  position: relative;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-gray-400);
+  padding: 7px 14px;
+  border-radius: 999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-capsule-link:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-capsule-link.active {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.active-pill-indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 106, 0, 0.35);
+  box-shadow: 0 0 12px rgba(255, 106, 0, 0.15);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Right cluster */
+.nav-right-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #000000;
+  background: linear-gradient(135deg, #FF6A00 0%, #FF852E 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-cta-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(255, 106, 0, 0.6);
+  filter: brightness(1.08);
+}
+
+.mobile-hamburger-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-gray-300);
+  padding: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  transition: color 0.2s ease;
+}
+
+.mobile-hamburger-btn:hover {
+  color: #FFFFFF;
+}
+
+/* Mobile Drawer */
+.mobile-nav-drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 9995;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-nav-drawer.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobile-drawer-content {
+  width: 82%;
+  max-width: 340px;
+  height: 100%;
+  background: #0d0d11;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-nav-drawer.open .mobile-drawer-content {
+  transform: translateX(0);
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-drawer-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-gray-600);
+}
+
+.mobile-drawer-close {
+  color: var(--text-gray-300);
+}
+
+.mobile-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 2rem 0;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-gray-300);
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-nav-item.active {
+  color: var(--accent-orange);
+}
+
+.active-star {
+  color: var(--accent-orange);
+}
+
+.mobile-cta-full {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--accent-orange);
+  color: #000000;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255, 106, 0, 0.35);
+}
+
+@media (max-width: 768px) {
+  .nav-links-cluster,
+  .logo-name {
+    display: none;
+  }
+  .mobile-hamburger-btn {
+    display: flex;
+  }
+  .apple-nav-capsule {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-cta-btn {
+    display: none;
+  }
+  .apple-nav-capsule {
+    width: auto;
+    gap: 1.25rem;
+  }
+}

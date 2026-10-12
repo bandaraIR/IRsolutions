@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Apple-Inspired Dark Portfolio Footer
+   ========================================================================== */
+
+.apple-portfolio-footer {
+  background: #000000;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 60px 24px 40px;
+  width: 100%;
+}
+
+.footer-content-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.footer-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-monogram {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--accent-orange);
+}
+
+.footer-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.footer-back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-gray-400);
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.footer-back-to-top:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.footer-middle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-tagline {
+  font-size: 0.88rem;
+  color: var(--text-gray-400);
+  max-width: 600px;
+}
+
+.footer-tech-stack-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--text-gray-600);
+}
+
+.footer-tech-stack-note .sep {
+  color: var(--accent-orange);
+}
+
+.footer-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-gray-600);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .footer-middle-row,
+  .footer-bottom-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
