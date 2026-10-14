@@ -186,12 +186,12 @@ export default function ContactSection() {
                 <Mail size={20} />
               </div>
               <div className="channel-card-body">
-  <span className="channel-card-tag">Primary Email</span>
-  <a href="mailto:projects@irsolutions.company" className="channel-primary-val">
-    projects@irsolutions.company
-  </a>
-  <p className="channel-sub-info">Typically reply within 24 hours.</p>
-</div>
+                <span className="channel-card-tag">Primary Email</span>
+                <a href={`mailto:${RECIPIENT_EMAIL}`} className="channel-primary-val">
+                  {RECIPIENT_EMAIL}
+                </a>
+                <p className="channel-sub-info">Typically reply within 24 hours.</p>
+              </div>
               <button 
                 className="channel-copy-btn" 
                 onClick={handleCopyEmail}
