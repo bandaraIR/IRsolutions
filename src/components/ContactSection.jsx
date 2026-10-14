@@ -13,7 +13,7 @@ import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { PERSONAL_INFO } from "../data/portfolioData";
 import "../styles/ContactSection.css";
 
-const RECIPIENT_EMAIL = "imalbandara624@gmail.com";
+const RECIPIENT_EMAIL = "projects@irsolutions.company";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
