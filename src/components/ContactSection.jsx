@@ -13,7 +13,7 @@ import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { PERSONAL_INFO } from "../data/portfolioData";
 import "../styles/ContactSection.css";
 
-const RECIPIENT_EMAIL = "projects@irsolutions.company";
+const RECIPIENT_EMAIL = "imalbandara624@gmail.com";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -186,12 +186,12 @@ export default function ContactSection() {
                 <Mail size={20} />
               </div>
               <div className="channel-card-body">
-                <span className="channel-card-tag">Primary Email</span>
-                <a href={`mailto:${RECIPIENT_EMAIL}`} className="channel-primary-val">
-                  {RECIPIENT_EMAIL}
-                </a>
-                <p className="channel-sub-info">Typically reply within 24 hours.</p>
-              </div>
+  <span className="channel-card-tag">Primary Email</span>
+  <a href="mailto:projects@irsolutions.company" className="channel-primary-val">
+    projects@irsolutions.company
+  </a>
+  <p className="channel-sub-info">Typically reply within 24 hours.</p>
+</div>
               <button 
                 className="channel-copy-btn" 
                 onClick={handleCopyEmail}
