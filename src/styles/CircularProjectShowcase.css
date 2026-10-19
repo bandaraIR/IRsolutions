@@ -24,6 +24,7 @@
 .circular-pinned-viewport {
   position: relative;
   height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
   background: radial-gradient(circle at 50% 50%, #08080b 0%, #000000 75%);
@@ -698,9 +699,15 @@
 @media (max-width: 767px) {
   .circular-pinned-viewport {
     padding: 0;
+    height: 100vh;
+    height: 100dvh;
+  }
+  .hello-overlay-layer {
+    will-change: transform, opacity;
   }
   .projects-showcase-layer {
     padding: 68px 12px 16px;
+    will-change: transform, opacity;
   }
   .showcase-top-header {
     margin-bottom: 2px;

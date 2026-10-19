@@ -29,14 +29,16 @@ function App() {
 
       // 3. Check Hello vs Projects within the master pinned showcase
       const st = window.__projectsScrollTrigger;
+      const isMobile = window.innerWidth < 768;
       if (st) {
-        if (st.progress > 0.12) {
+        const threshold = isMobile ? 0.05 : 0.12;
+        if (st.progress > threshold) {
           setActiveSection("projects");
         } else {
           setActiveSection("welcome");
         }
       } else {
-        if (window.scrollY > windowHeight * 0.5) {
+        if (window.scrollY > windowHeight * (isMobile ? 0.35 : 0.5)) {
           setActiveSection("projects");
         } else {
           setActiveSection("welcome");

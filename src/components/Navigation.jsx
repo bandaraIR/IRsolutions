@@ -33,12 +33,14 @@ export default function Navigation({ activeSection = "welcome" }) {
         return;
       }
       const st = window.__projectsScrollTrigger;
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
       if (st && st.end > st.start) {
-        const targetScroll = st.start + 0.16 * (st.end - st.start);
+        const targetProgress = isMobile ? 0.08 : 0.16;
+        const targetScroll = st.start + targetProgress * (st.end - st.start);
         window.scrollTo({ top: targetScroll, behavior: "smooth" });
         return;
       } else {
-        window.scrollTo({ top: window.innerHeight * 1.25, behavior: "smooth" });
+        window.scrollTo({ top: window.innerHeight * (isMobile ? 0.85 : 1.25), behavior: "smooth" });
         return;
       }
     }

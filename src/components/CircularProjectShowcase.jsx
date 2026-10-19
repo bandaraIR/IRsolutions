@@ -9,8 +9,21 @@ import "../styles/CircularProjectShowcase.css";
 gsap.registerPlugin(ScrollTrigger);
 
 // Threshold definitions for synchronized transition
-const HELLO_END_PROGRESS = 0.14; // Hello fadeout completes here
-const PROJECT_0_PLATEAU = 0.18; // Project 0 rests cleanly centered from 0.14 to 0.18
+const HELLO_END_PROGRESS_DESKTOP = 0.14; // Hello fadeout completes here on desktop
+const PROJECT_0_PLATEAU_DESKTOP = 0.18; // Project 0 rests cleanly centered from 0.14 to 0.18 on desktop
+
+// Responsive thresholds for mobile: immediate, seamless glide with zero dead delay
+const HELLO_END_PROGRESS_MOBILE = 0.075;
+const PROJECT_0_PLATEAU_MOBILE = 0.085;
+
+const getThresholds = () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  return {
+    isMobile,
+    helloEnd: isMobile ? HELLO_END_PROGRESS_MOBILE : HELLO_END_PROGRESS_DESKTOP,
+    plateau: isMobile ? PROJECT_0_PLATEAU_MOBILE : PROJECT_0_PLATEAU_DESKTOP,
+  };
+};
 
 export default function CircularProjectShowcase() {
   const sectionRef = useRef(null);
@@ -25,6 +38,11 @@ export default function CircularProjectShowcase() {
 
   const lastProgressRef = useRef(0);
   const rafIdRef = useRef(null);
+
+  // Touch Swipe Gesture tracking refs
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const isSwipingRef = useRef(false);
 
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [selectedModalProject, setSelectedModalProject] = useState(null);
@@ -48,7 +66,7 @@ export default function CircularProjectShowcase() {
         if (!isRunning) return;
 
         // Modulate liquid turbulence only when Hello is actually in or entering view
-        if (lastProgressRef.current <= HELLO_END_PROGRESS + 0.04) {
+        if (lastProgressRef.current <= HELLO_END_PROGRESS_DESKTOP + 0.04) {
           const t = (now - startTime) * 0.001;
           const freqX = 0.013 + 0.0035 * Math.sin(t * 1.35);
           const freqY = 0.022 + 0.0045 * Math.cos(t * 1.05);
@@ -137,36 +155,49 @@ export default function CircularProjectShowcase() {
   const handleScrollProgress = useCallback((progress) => {
     lastProgressRef.current = progress;
 
+    const { isMobile, helloEnd, plateau } = getThresholds();
+
     // ----------------------------------------------------
     // PHASE 1: Hello -> Projects Synchronized Transition
     // ----------------------------------------------------
-    if (progress < HELLO_END_PROGRESS) {
+    if (progress < helloEnd) {
       // Normalized progress for transition: 0 (initial) to 1 (projects full focus)
-      const u = Math.min(1, Math.max(0, progress / HELLO_END_PROGRESS));
+      const u = Math.min(1, Math.max(0, progress / helloEnd));
       // Smooth Hermite ease-in-out curve for natural, organic motion
       const ease = u * u * (3 - 2 * u);
 
       // 1. "Hello" liquid text ascends smoothly, elongates with surface tension, and dissolves
       if (helloStageRef.current) {
-        const helloY = -54 * ease; // 0vh to -54vh
-        const stretchY = 1 + 0.28 * ease; // liquid elongation
-        const pinchX = 1 - 0.14 * ease;   // liquid surface tension pinch
-        const helloOpacity = Math.max(0, 1 - u * 1.3); // fades cleanly to 0
-        const helloBlur = 9 * ease;
+        const helloY = isMobile ? -38 * ease : -54 * ease;
+        const stretchY = isMobile ? 1 + 0.12 * ease : 1 + 0.28 * ease;
+        const pinchX = isMobile ? 1 - 0.06 * ease : 1 - 0.14 * ease;
+        const helloOpacity = Math.max(0, 1 - u * (isMobile ? 1.15 : 1.3));
 
         helloStageRef.current.style.display = "flex";
         helloStageRef.current.style.transform = `translate3d(0, ${helloY}vh, 0) scale(${pinchX}, ${stretchY})`;
         helloStageRef.current.style.opacity = helloOpacity;
-        helloStageRef.current.style.filter = `blur(${helloBlur}px)`;
+        
+        // High Performance: Only apply CSS blur on desktop; mobile relies strictly on GPU composite (opacity + transform)
+        if (!isMobile) {
+          const helloBlur = 9 * ease;
+          helloStageRef.current.style.filter = `blur(${helloBlur}px)`;
+        } else {
+          helloStageRef.current.style.filter = "none";
+        }
+
         // Release pointer events immediately as Hello begins dissolving so it never blocks project buttons
         helloStageRef.current.style.pointerEvents = u > 0.35 ? "none" : "all";
         helloStageRef.current.style.zIndex = u > 0.35 ? "10" : "40";
       }
 
-      // Dynamic liquid distortion scale increases with scroll: letters liquefy and disperse as they ascend
+      // Dynamic liquid distortion scale: update only on desktop to avoid SVG filter re-rasterization delays on mobile
       if (displacementRef.current) {
-        const dynamicScale = 14 + ease * 42;
-        displacementRef.current.setAttribute("scale", dynamicScale.toFixed(1));
+        if (!isMobile) {
+          const dynamicScale = 14 + ease * 42;
+          displacementRef.current.setAttribute("scale", dynamicScale.toFixed(1));
+        } else {
+          displacementRef.current.setAttribute("scale", "14");
+        }
       }
 
       // Scroll hint indicator fades and disables pointer events immediately
@@ -179,14 +210,17 @@ export default function CircularProjectShowcase() {
 
       // 2. Projects stage rises smoothly from below into prominent focus
       if (projectsStageRef.current) {
-        const projY = 28 * (1 - ease); // 28vh down to 0vh
-        const projScale = 0.94 + 0.06 * ease; // 0.94 to 1.0
-        const projOpacity = u < 0.15 ? 0 : Math.min(1, (u - 0.15) / 0.85);
+        const projY = isMobile ? 14 * (1 - ease) : 28 * (1 - ease);
+        const projScale = isMobile ? 0.96 + 0.04 * ease : 0.94 + 0.06 * ease;
+        // Immediate cross-fade on mobile eliminating dead scroll gap
+        const projOpacity = isMobile
+          ? Math.min(1, u * 1.25)
+          : (u < 0.15 ? 0 : Math.min(1, (u - 0.15) / 0.85));
 
         projectsStageRef.current.style.display = "flex";
         projectsStageRef.current.style.transform = `translate3d(0, ${projY}vh, 0) scale(${projScale})`;
         projectsStageRef.current.style.opacity = projOpacity;
-        projectsStageRef.current.style.pointerEvents = u > 0.45 ? "all" : "none";
+        projectsStageRef.current.style.pointerEvents = u > 0.4 ? "all" : "none";
         projectsStageRef.current.style.zIndex = "30";
       }
 
@@ -223,12 +257,12 @@ export default function CircularProjectShowcase() {
       }
 
       // Map progress to project index:
-      // Project 0 has a stable plateau from HELLO_END_PROGRESS (0.14) to PROJECT_0_PLATEAU (0.18)
+      // Project 0 rests cleanly centered from helloEnd to plateau
       let continuousIndex = 0;
-      if (progress <= PROJECT_0_PLATEAU) {
+      if (progress <= plateau) {
         continuousIndex = 0;
       } else {
-        const remainingProgress = (progress - PROJECT_0_PLATEAU) / (1 - PROJECT_0_PLATEAU);
+        const remainingProgress = (progress - plateau) / (1 - plateau);
         continuousIndex = Math.min(totalProjects - 1, Math.max(0, remainingProgress * (totalProjects - 1)));
       }
       updateCardPositions(continuousIndex);
@@ -247,13 +281,15 @@ export default function CircularProjectShowcase() {
       return;
     }
 
+    const { helloEnd, plateau } = getThresholds();
+
     let targetProgress;
     if (index === 0) {
-      // Land cleanly in the middle of Project 0's resting plateau (0.16)
-      targetProgress = (HELLO_END_PROGRESS + PROJECT_0_PLATEAU) / 2;
+      // Land cleanly in the middle of Project 0's resting plateau
+      targetProgress = (helloEnd + plateau) / 2;
     } else {
-      // Map index (1 to totalProjects - 1) to progress range (PROJECT_0_PLATEAU to 1.0)
-      targetProgress = PROJECT_0_PLATEAU + (index / (totalProjects - 1)) * (1 - PROJECT_0_PLATEAU);
+      // Map index (1 to totalProjects - 1) to progress range (plateau to 1.0)
+      targetProgress = plateau + (index / (totalProjects - 1)) * (1 - plateau);
     }
 
     const targetScroll = st.start + targetProgress * (st.end - st.start);
@@ -314,10 +350,10 @@ export default function CircularProjectShowcase() {
       const st = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
-        end: isMobile ? "+=380%" : "+=600%", // Compact & snappy on mobile devices
+        end: isMobile ? "+=340%" : "+=600%", // Compact & snappy on mobile devices
         pin: viewportRef.current,
         anticipatePin: 1,
-        scrub: isMobile ? 0.35 : 1.0, // Buttery smooth and immediate on mobile touch
+        scrub: isMobile ? true : 0.8, // Instant 1:1 touch response on mobile; silky scrub on desktop
         fastScrollEnd: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
