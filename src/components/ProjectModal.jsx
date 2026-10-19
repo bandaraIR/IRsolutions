@@ -1,12 +1,48 @@
-import { useEffect } from "react";
-import { X, CheckCircle2, Calendar, Tag, ArrowRight, ShieldCheck } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { 
+  X, 
+  CheckCircle2, 
+  Calendar, 
+  Tag, 
+  ArrowRight, 
+  ArrowLeft,
+  ChevronLeft, 
+  ChevronRight, 
+  ShieldCheck, 
+  Layers, 
+  Sparkles,
+  ExternalLink 
+} from "lucide-react";
 import "../styles/ProjectModal.css";
 
-export default function ProjectModal({ project, onClose }) {
+export default function ProjectModal({ 
+  project, 
+  allProjects = [], 
+  onSelectProject, 
+  onClose, 
+  onInquire 
+}) {
+  const scrollContainerRef = useRef(null);
+
+  // Find index of current project
+  const currentIndex = allProjects.findIndex((p) => p.id === project?.id);
+  const totalCount = allProjects.length;
+  const prevProject = currentIndex > 0 ? allProjects[currentIndex - 1] : null;
+  const nextProject = currentIndex < totalCount - 1 ? allProjects[currentIndex + 1] : null;
+
+  // Keyboard navigation: Escape to close, Left/Right arrow keys to switch projects
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+      } else if (e.key === "ArrowLeft" && prevProject && onSelectProject) {
+        onSelectProject(prevProject);
+      } else if (e.key === "ArrowRight" && nextProject && onSelectProject) {
+        onSelectProject(nextProject);
+      }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     document.body.style.overflow = "hidden";
 
@@ -14,11 +50,28 @@ export default function ProjectModal({ project, onClose }) {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "auto";
     };
-  }, [onClose]);
+  }, [onClose, prevProject, nextProject, onSelectProject]);
+
+  // Reset scroll to top when project changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [project?.id]);
 
   if (!project) return null;
 
-  return (
+  const handleInquireClick = () => {
+    if (onInquire) {
+      onInquire(project);
+    } else {
+      onClose();
+      const el = document.getElementById("contact");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return createPortal(
     <div className="project-modal-backdrop" onClick={onClose}>
       <div 
         className="project-modal-container"
@@ -29,7 +82,10 @@ export default function ProjectModal({ project, onClose }) {
       >
         {/* Sticky Modal Header Bar */}
         <div className="modal-header-bar">
-          <div className="modal-header-meta">
+          <div className="modal-header-left">
+            <span className="modal-counter-badge">
+              0{currentIndex >= 0 ? currentIndex + 1 : 1} / 0{totalCount}
+            </span>
             <span className="modal-tag-badge">
               <Tag size={12} />
               {project.category}
@@ -40,17 +96,68 @@ export default function ProjectModal({ project, onClose }) {
             </span>
           </div>
 
-          <button 
-            className="modal-close-btn"
-            onClick={onClose}
-            aria-label="Close modal"
-          >
-            <X size={20} />
-          </button>
+          {/* Quick Prev / Next Switchers & Close */}
+          <div className="modal-header-controls">
+            {allProjects.length > 1 && (
+              <div className="modal-nav-arrows">
+                <button
+                  className="modal-arrow-btn"
+                  onClick={() => prevProject && onSelectProject(prevProject)}
+                  disabled={!prevProject}
+                  aria-label="Previous project"
+                  title={prevProject ? `Previous: ${prevProject.title}` : "First project"}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  className="modal-arrow-btn"
+                  onClick={() => nextProject && onSelectProject(nextProject)}
+                  disabled={!nextProject}
+                  aria-label="Next project"
+                  title={nextProject ? `Next: ${nextProject.title}` : "Last project"}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
+
+            <button 
+              className="modal-close-btn"
+              onClick={onClose}
+              aria-label="Close modal"
+              title="Close (Esc)"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
+        {/* Project Switcher Navigation Strip */}
+        {allProjects.length > 1 && (
+          <div className="modal-switcher-strip" role="tablist" aria-label="Projects directory">
+            <div className="switcher-strip-inner">
+              {allProjects.map((p, i) => {
+                const isActive = p.id === project.id;
+                return (
+                  <button
+                    key={p.id}
+                    className={`switcher-pill ${isActive ? "active" : ""}`}
+                    onClick={() => onSelectProject && onSelectProject(p)}
+                    role="tab"
+                    aria-selected={isActive}
+                    title={p.title}
+                  >
+                    <span className="switcher-num">0{i + 1}</span>
+                    <span className="switcher-title">{p.title.split("–")[0].split("-")[0].trim()}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Modal Scrollable Body */}
-        <div className="modal-body-scroll">
+        <div className="modal-body-scroll" ref={scrollContainerRef}>
           
           {/* Project Title & Context Header */}
           <div className="modal-header-text-block">
@@ -76,22 +183,43 @@ export default function ProjectModal({ project, onClose }) {
 
           {/* Quick Action Ribbon */}
           <div className="modal-actions-ribbon">
-            <div className="modal-timeline-pill">
-              <Calendar size={14} />
-              <span>{project.year}</span>
+            <div className="modal-timeline-cluster">
+              <div className="modal-timeline-pill">
+                <Calendar size={14} />
+                <span>{project.year}</span>
+              </div>
+              <div className="modal-timeline-pill">
+                <Layers size={14} />
+                <span>Architecture Breakdown</span>
+              </div>
             </div>
 
             <div className="modal-action-buttons">
-              <a 
-                href="#contact" 
+              <button 
+                type="button"
                 className="modal-btn-primary"
-                onClick={onClose}
+                onClick={handleInquireClick}
               >
+                <Sparkles size={15} />
                 <span>Inquire About Project</span>
                 <ArrowRight size={15} />
-              </a>
+              </button>
             </div>
           </div>
+
+          {/* Tech Stack Badges Strip */}
+          {project.techStack && project.techStack.length > 0 && (
+            <div className="modal-tech-strip">
+              <span className="tech-strip-label">Engineered With:</span>
+              <div className="tech-chips-cluster">
+                {project.techStack.map((tech, idx) => (
+                  <span key={idx} className="tech-chip">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Two Column Architectural Breakdown */}
           <div className="modal-content-grid">
@@ -169,7 +297,38 @@ export default function ProjectModal({ project, onClose }) {
 
           </div>
 
-          {/* Modal Footer */}
+          {/* Bottom Project-to-Project Navigation Footers */}
+          {allProjects.length > 1 && (
+            <div className="modal-footer-nav-grid">
+              {prevProject ? (
+                <button
+                  className="footer-nav-card prev"
+                  onClick={() => onSelectProject(prevProject)}
+                >
+                  <ArrowLeft size={16} className="footer-nav-arrow" />
+                  <div className="footer-nav-text">
+                    <span className="footer-nav-direction">Previous Project</span>
+                    <span className="footer-nav-title">{prevProject.title}</span>
+                  </div>
+                </button>
+              ) : <div className="footer-nav-placeholder" />}
+
+              {nextProject ? (
+                <button
+                  className="footer-nav-card next"
+                  onClick={() => onSelectProject(nextProject)}
+                >
+                  <div className="footer-nav-text">
+                    <span className="footer-nav-direction">Next Project</span>
+                    <span className="footer-nav-title">{nextProject.title}</span>
+                  </div>
+                  <ArrowRight size={16} className="footer-nav-arrow" />
+                </button>
+              ) : <div className="footer-nav-placeholder" />}
+            </div>
+          )}
+
+          {/* Modal Footer Bar */}
           <div className="modal-footer-bar">
             <span>Enterprise Solutions Portfolio · Imal Ravindu</span>
             <button className="modal-dismiss-btn" onClick={onClose}>
@@ -179,6 +338,7 @@ export default function ProjectModal({ project, onClose }) {
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

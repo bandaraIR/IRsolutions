@@ -28,10 +28,17 @@ export default function Navigation({ activeSection = "welcome" }) {
       return;
     }
     if (id === "projects") {
+      if (typeof window.__scrollToProject === "function") {
+        window.__scrollToProject(0);
+        return;
+      }
       const st = window.__projectsScrollTrigger;
-      if (st) {
-        const targetScroll = st.start + 0.16 * (st.end - st.start) + 2;
+      if (st && st.end > st.start) {
+        const targetScroll = st.start + 0.16 * (st.end - st.start);
         window.scrollTo({ top: targetScroll, behavior: "smooth" });
+        return;
+      } else {
+        window.scrollTo({ top: window.innerHeight * 1.25, behavior: "smooth" });
         return;
       }
     }

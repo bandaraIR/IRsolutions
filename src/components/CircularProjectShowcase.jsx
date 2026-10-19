@@ -8,8 +8,9 @@ import "../styles/CircularProjectShowcase.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Proportion of pinned scroll distance dedicated to the Hello -> Projects transition
-const TRANSITION_THRESHOLD = 0.16;
+// Threshold definitions for synchronized transition
+const HELLO_END_PROGRESS = 0.14; // Hello fadeout completes here
+const PROJECT_0_PLATEAU = 0.18; // Project 0 rests cleanly centered from 0.14 to 0.18
 
 export default function CircularProjectShowcase() {
   const sectionRef = useRef(null);
@@ -29,18 +30,25 @@ export default function CircularProjectShowcase() {
   const [selectedModalProject, setSelectedModalProject] = useState(null);
   const totalProjects = PROJECTS_DATA.length;
 
-  // Continuous Organic Liquid Wave Animation (active when Hello stage is visible)
+  // Continuous Organic Liquid Wave Animation (active when Hello stage is visible on desktop)
   useEffect(() => {
     let isRunning = true;
     const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobileDevice = typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
 
-    if (!isReduced) {
+    // Set high-fidelity static baseline on all devices
+    if (turbulenceRef.current) {
+      turbulenceRef.current.setAttribute("baseFrequency", "0.014 0.022");
+    }
+
+    // Only run continuous SVG filter manipulation on desktop devices to prevent mobile CPU/GPU thermal lag
+    if (!isReduced && !isMobileDevice) {
       const startTime = performance.now();
       const tick = (now) => {
         if (!isRunning) return;
 
-        // Modulate liquid turbulence when Hello is in or entering view
-        if (lastProgressRef.current <= TRANSITION_THRESHOLD + 0.05) {
+        // Modulate liquid turbulence only when Hello is actually in or entering view
+        if (lastProgressRef.current <= HELLO_END_PROGRESS + 0.04) {
           const t = (now - startTime) * 0.001;
           const freqX = 0.013 + 0.0035 * Math.sin(t * 1.35);
           const freqY = 0.022 + 0.0045 * Math.cos(t * 1.05);
@@ -80,31 +88,44 @@ export default function CircularProjectShowcase() {
       const delta = index - continuousIndex;
       const absDelta = Math.abs(delta);
 
+      // Mobile Performance: Cull cards beyond view to eliminate unnecessary 3D compositing
+      const cullingThreshold = isMobile ? 1.35 : 2.4;
+      if (absDelta > cullingThreshold) {
+        card.style.display = "none";
+        return;
+      } else {
+        card.style.display = "block";
+      }
+
       // Responsive 3D Arc Geometry
       const angleRad = (delta * (isMobile ? 18 : 26) * Math.PI) / 180;
-      const radiusX = isMobile ? 30 : (isTablet ? 85 : 160);
-      const radiusY = isMobile ? 70 : (isTablet ? 105 : 135);
-      const deltaYFactor = isMobile ? 90 : (isTablet ? 110 : 135);
-      const depthZFactor = isMobile ? 170 : (isTablet ? 210 : 260);
+      const radiusX = isMobile ? 24 : (isTablet ? 85 : 160);
+      const radiusY = isMobile ? 65 : (isTablet ? 105 : 135);
+      const deltaYFactor = isMobile ? 85 : (isTablet ? 110 : 135);
+      const depthZFactor = isMobile ? 160 : (isTablet ? 210 : 260);
 
       const posX = Math.sin(angleRad) * radiusX;
       const posY = delta * deltaYFactor + (1 - Math.cos(angleRad)) * (delta > 0 ? radiusY : -radiusY);
       const posZ = -absDelta * depthZFactor;
 
-      const rotateY = -delta * (isMobile ? 10 : 20);
-      const rotateZ = delta * (isMobile ? 1.5 : 3.5);
-      const rotateX = delta > 0 ? (isMobile ? 4 : 8) : (isMobile ? -4 : -8);
+      const rotateY = -delta * (isMobile ? 8 : 20);
+      const rotateZ = delta * (isMobile ? 1.2 : 3.5);
+      const rotateX = delta > 0 ? (isMobile ? 3 : 8) : (isMobile ? -3 : -8);
 
-      const scale = Math.max(isMobile ? 0.72 : 0.65, 1 - absDelta * (isMobile ? 0.14 : 0.18));
+      const scale = Math.max(isMobile ? 0.74 : 0.65, 1 - absDelta * (isMobile ? 0.12 : 0.18));
       const opacity = Math.max(0, 1 - absDelta * (isMobile ? 0.65 : 0.58));
-      const zIndex = Math.round(100 - absDelta * 20);
+      
+      // Strict stacking hierarchy: focused card is ALWAYS on top (z-index 100)
+      const isFocused = index === currentIndex;
+      const zIndex = isFocused ? 100 : Math.max(1, Math.round(50 - absDelta * 10));
 
-      card.style.transform = `translate3d(${posX}px, ${posY}px, ${posZ}px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) rotateZ(${rotateZ}deg) scale(${scale})`;
-      card.style.opacity = opacity;
+      card.style.transform = `translate3d(${posX.toFixed(1)}px, ${posY.toFixed(1)}px, ${posZ.toFixed(1)}px) rotateY(${rotateY.toFixed(1)}deg) rotateX(${rotateX.toFixed(1)}deg) rotateZ(${rotateZ.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+      card.style.opacity = opacity.toFixed(2);
       card.style.zIndex = zIndex;
-      card.style.pointerEvents = absDelta < 0.85 ? "all" : "none";
+      // Focused card is fully interactive; background cards accept clicks to focus only if within view range
+      card.style.pointerEvents = isFocused ? "auto" : (absDelta < 1.8 ? "auto" : "none");
 
-      if (absDelta < 0.45) {
+      if (isFocused) {
         card.classList.add("is-in-focus");
       } else {
         card.classList.remove("is-in-focus");
@@ -119,9 +140,9 @@ export default function CircularProjectShowcase() {
     // ----------------------------------------------------
     // PHASE 1: Hello -> Projects Synchronized Transition
     // ----------------------------------------------------
-    if (progress <= TRANSITION_THRESHOLD) {
+    if (progress < HELLO_END_PROGRESS) {
       // Normalized progress for transition: 0 (initial) to 1 (projects full focus)
-      const u = Math.min(1, Math.max(0, progress / TRANSITION_THRESHOLD));
+      const u = Math.min(1, Math.max(0, progress / HELLO_END_PROGRESS));
       // Smooth Hermite ease-in-out curve for natural, organic motion
       const ease = u * u * (3 - 2 * u);
 
@@ -130,13 +151,16 @@ export default function CircularProjectShowcase() {
         const helloY = -54 * ease; // 0vh to -54vh
         const stretchY = 1 + 0.28 * ease; // liquid elongation
         const pinchX = 1 - 0.14 * ease;   // liquid surface tension pinch
-        const helloOpacity = Math.max(0, 1 - u * 1.28); // fades cleanly to 0
+        const helloOpacity = Math.max(0, 1 - u * 1.3); // fades cleanly to 0
         const helloBlur = 9 * ease;
 
+        helloStageRef.current.style.display = "flex";
         helloStageRef.current.style.transform = `translate3d(0, ${helloY}vh, 0) scale(${pinchX}, ${stretchY})`;
         helloStageRef.current.style.opacity = helloOpacity;
         helloStageRef.current.style.filter = `blur(${helloBlur}px)`;
+        // Release pointer events immediately as Hello begins dissolving so it never blocks project buttons
         helloStageRef.current.style.pointerEvents = u > 0.35 ? "none" : "all";
+        helloStageRef.current.style.zIndex = u > 0.35 ? "10" : "40";
       }
 
       // Dynamic liquid distortion scale increases with scroll: letters liquefy and disperse as they ascend
@@ -145,21 +169,25 @@ export default function CircularProjectShowcase() {
         displacementRef.current.setAttribute("scale", dynamicScale.toFixed(1));
       }
 
-      // Scroll hint indicator fades immediately on initial scroll
+      // Scroll hint indicator fades and disables pointer events immediately
       if (scrollIndicatorRef.current) {
-        scrollIndicatorRef.current.style.opacity = Math.max(0, 1 - u * 3.5);
+        const indOpacity = Math.max(0, 1 - u * 3.0);
+        scrollIndicatorRef.current.style.opacity = indOpacity;
+        scrollIndicatorRef.current.style.pointerEvents = indOpacity > 0.1 ? "all" : "none";
+        scrollIndicatorRef.current.style.display = indOpacity > 0.01 ? "flex" : "none";
       }
 
       // 2. Projects stage rises smoothly from below into prominent focus
       if (projectsStageRef.current) {
-        const projY = 32 * (1 - ease); // 32vh down to 0vh
+        const projY = 28 * (1 - ease); // 28vh down to 0vh
         const projScale = 0.94 + 0.06 * ease; // 0.94 to 1.0
-        // Opacity stays 0 briefly at the very beginning to prevent any premature flash, then fades up smoothly
-        const projOpacity = u < 0.12 ? 0 : Math.min(1, (u - 0.12) / 0.88);
+        const projOpacity = u < 0.15 ? 0 : Math.min(1, (u - 0.15) / 0.85);
 
+        projectsStageRef.current.style.display = "flex";
         projectsStageRef.current.style.transform = `translate3d(0, ${projY}vh, 0) scale(${projScale})`;
         projectsStageRef.current.style.opacity = projOpacity;
-        projectsStageRef.current.style.pointerEvents = u > 0.75 ? "all" : "none";
+        projectsStageRef.current.style.pointerEvents = u > 0.45 ? "all" : "none";
+        projectsStageRef.current.style.zIndex = "30";
       }
 
       // Project cards held at index 0 (first project ready in focus)
@@ -169,13 +197,17 @@ export default function CircularProjectShowcase() {
     // PHASE 2: Projects Fully in View -> 3D Circular Orbit
     // ----------------------------------------------------
     else {
-      // Ensure Hello is completely hidden
+      // Ensure Hello is completely hidden with display: none so it can never capture clicks
       if (helloStageRef.current) {
         helloStageRef.current.style.opacity = 0;
         helloStageRef.current.style.pointerEvents = "none";
+        helloStageRef.current.style.display = "none";
+        helloStageRef.current.style.zIndex = "0";
       }
       if (scrollIndicatorRef.current) {
         scrollIndicatorRef.current.style.opacity = 0;
+        scrollIndicatorRef.current.style.pointerEvents = "none";
+        scrollIndicatorRef.current.style.display = "none";
       }
       if (displacementRef.current) {
         displacementRef.current.setAttribute("scale", "14");
@@ -183,19 +215,70 @@ export default function CircularProjectShowcase() {
 
       // Projects stage is fully settled at center
       if (projectsStageRef.current) {
+        projectsStageRef.current.style.display = "flex";
         projectsStageRef.current.style.transform = "translate3d(0, 0, 0) scale(1)";
         projectsStageRef.current.style.opacity = 1;
         projectsStageRef.current.style.pointerEvents = "all";
+        projectsStageRef.current.style.zIndex = "30";
       }
 
-      // Map remaining scroll distance to project index (0 to 4)
-      const projProgress = (progress - TRANSITION_THRESHOLD) / (1 - TRANSITION_THRESHOLD);
-      const continuousIndex = projProgress * (totalProjects - 1);
+      // Map progress to project index:
+      // Project 0 has a stable plateau from HELLO_END_PROGRESS (0.14) to PROJECT_0_PLATEAU (0.18)
+      let continuousIndex = 0;
+      if (progress <= PROJECT_0_PLATEAU) {
+        continuousIndex = 0;
+      } else {
+        const remainingProgress = (progress - PROJECT_0_PLATEAU) / (1 - PROJECT_0_PLATEAU);
+        continuousIndex = Math.min(totalProjects - 1, Math.max(0, remainingProgress * (totalProjects - 1)));
+      }
       updateCardPositions(continuousIndex);
     }
   }, [updateCardPositions, totalProjects]);
 
+  // Navigate directly to a specific project by scrolling the window
+  const scrollToProject = useCallback((index) => {
+    const st = window.__projectsScrollTrigger;
+    if (!st || !st.end || st.end <= st.start) {
+      const fallbackTarget = window.innerHeight * (1.2 + (index / (totalProjects - 1)) * 3.5);
+      window.scrollTo({
+        top: fallbackTarget,
+        behavior: "smooth"
+      });
+      return;
+    }
+
+    let targetProgress;
+    if (index === 0) {
+      // Land cleanly in the middle of Project 0's resting plateau (0.16)
+      targetProgress = (HELLO_END_PROGRESS + PROJECT_0_PLATEAU) / 2;
+    } else {
+      // Map index (1 to totalProjects - 1) to progress range (PROJECT_0_PLATEAU to 1.0)
+      targetProgress = PROJECT_0_PLATEAU + (index / (totalProjects - 1)) * (1 - PROJECT_0_PLATEAU);
+    }
+
+    const targetScroll = st.start + targetProgress * (st.end - st.start);
+    window.scrollTo({
+      top: targetScroll,
+      behavior: "smooth"
+    });
+  }, [totalProjects]);
+
+  const handleNext = () => {
+    if (activeProjectIndex < totalProjects - 1) {
+      scrollToProject(activeProjectIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (activeProjectIndex > 0) {
+      scrollToProject(activeProjectIndex - 1);
+    }
+  };
+
   useEffect(() => {
+    // Expose helpers globally so Navigation bar can accurately target projects
+    window.__scrollToProject = scrollToProject;
+
     const ctx = gsap.context(() => {
       // Initial entrance reveal for "Hello" word
       if (helloWordRef.current) {
@@ -224,14 +307,18 @@ export default function CircularProjectShowcase() {
         );
       }
 
+      // Responsive Scroll distance & scrub feel
+      const isMobile = window.innerWidth < 768;
+
       // Master Pinned ScrollTrigger Timeline
       const st = ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top top",
-        end: "+=640%", // Generous scroll space for smooth 7-project pacing
+        end: isMobile ? "+=380%" : "+=600%", // Compact & snappy on mobile devices
         pin: viewportRef.current,
         anticipatePin: 1,
-        scrub: 1.1, // Silky Apple scroll inertia
+        scrub: isMobile ? 0.35 : 1.0, // Buttery smooth and immediate on mobile touch
+        fastScrollEnd: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           handleScrollProgress(self.progress);
@@ -240,43 +327,50 @@ export default function CircularProjectShowcase() {
 
       // Expose to window so Navigation can accurately target the projects scroll offset
       window.__projectsScrollTrigger = st;
-    }, sectionRef);
+    }, sectionRef.current);
 
     // Initial state pass (progress = 0)
     handleScrollProgress(0);
 
     return () => {
       window.__projectsScrollTrigger = null;
+      window.__scrollToProject = null;
       ctx.revert();
     };
-  }, [handleScrollProgress]);
+  }, [handleScrollProgress, scrollToProject]);
 
-  // Navigate directly to a specific project by scrolling the window
-  const scrollToProject = (index) => {
-    const st = window.__projectsScrollTrigger;
-    if (!st) return;
-
-    // Index 0 sits exactly at TRANSITION_THRESHOLD
-    const targetProgress = TRANSITION_THRESHOLD + (index / (totalProjects - 1)) * (1 - TRANSITION_THRESHOLD);
-    const targetScroll = st.start + targetProgress * (st.end - st.start) + 2;
-
-    window.scrollTo({
-      top: targetScroll,
-      behavior: "smooth"
-    });
-  };
-
-  const handleNext = () => {
-    if (activeProjectIndex < totalProjects - 1) {
-      scrollToProject(activeProjectIndex + 1);
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length === 1) {
+      touchStartXRef.current = e.touches[0].clientX;
+      touchStartYRef.current = e.touches[0].clientY;
+      isSwipingRef.current = false;
     }
   };
 
-  const handlePrev = () => {
-    if (activeProjectIndex > 0) {
-      scrollToProject(activeProjectIndex - 1);
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches.length === 1) {
+      const diffX = e.touches[0].clientX - touchStartXRef.current;
+      const diffY = e.touches[0].clientY - touchStartYRef.current;
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 18) {
+        isSwipingRef.current = true;
+      }
     }
   };
+
+  const handleTouchEnd = (e) => {
+    if (isSwipingRef.current && e.changedTouches && e.changedTouches.length === 1) {
+      const diffX = e.changedTouches[0].clientX - touchStartXRef.current;
+      if (diffX < -35) {
+        // Swiped Left -> Advance to next project
+        handleNext();
+      } else if (diffX > 35) {
+        // Swiped Right -> Go to previous project
+        handlePrev();
+      }
+    }
+    isSwipingRef.current = false;
+  };
+
 
   return (
     <>
@@ -428,7 +522,12 @@ export default function CircularProjectShowcase() {
             </div>
 
             {/* 3D Circular Orbit Stage */}
-            <div className="circular-stage-3d">
+            <div 
+              className="circular-stage-3d"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
               {PROJECTS_DATA.map((project, index) => {
                 const isFocused = index === activeProjectIndex;
                 return (
@@ -436,9 +535,16 @@ export default function CircularProjectShowcase() {
                     key={project.id}
                     ref={(el) => (cardsRef.current[index] = el)}
                     className={`circular-project-card ${isFocused ? "is-in-focus" : ""}`}
-                    onClick={() => !isFocused && scrollToProject(index)}
-                    tabIndex={isFocused ? 0 : -1}
-                    aria-label={`${project.title} - ${project.category}`}
+                    onClick={() => {
+                      if (isFocused) {
+                        setSelectedModalProject(project);
+                      } else {
+                        scrollToProject(index);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${project.title} - ${project.category}. Click to explore details.`}
                   >
                     {/* Card Glowing Outer Border */}
                     <div className="card-outer-glow" aria-hidden="true" />
@@ -485,6 +591,8 @@ export default function CircularProjectShowcase() {
                         {/* Interactive Buttons */}
                         <div className="card-actions-cluster">
                           <button
+                            type="button"
+                            id={isFocused ? "active-explore-project-btn" : undefined}
                             className="btn-view-project"
                             onClick={(e) => {
                               e.stopPropagation();
@@ -556,7 +664,24 @@ export default function CircularProjectShowcase() {
       {selectedModalProject && (
         <ProjectModal
           project={selectedModalProject}
+          allProjects={PROJECTS_DATA}
+          onSelectProject={(proj) => setSelectedModalProject(proj)}
           onClose={() => setSelectedModalProject(null)}
+          onInquire={(proj) => {
+            setSelectedModalProject(null);
+            setTimeout(() => {
+              const contactEl = document.getElementById("contact");
+              if (contactEl) {
+                contactEl.scrollIntoView({ behavior: "smooth" });
+                // Also trigger custom event to prefill subject in contact form!
+                window.dispatchEvent(
+                  new CustomEvent("prefill-contact-subject", {
+                    detail: { subject: `Inquiry regarding ${proj.title}` }
+                  })
+                );
+              }
+            }, 100);
+          }}
         />
       )}
     </>

@@ -1,25 +1,37 @@
-import { useState } from "react";
-import { 
-  Send, 
-  Mail, 
-  MapPin, 
-  Copy, 
-  Check, 
-  FileText, 
-  Sparkles, 
-  ArrowUpRight 
+import { useState, useEffect } from "react";
+import {
+  Send,
+  Mail,
+  MapPin,
+  Copy,
+  Check,
+  FileText,
+  Sparkles,
+  ArrowUpRight
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { PERSONAL_INFO } from "../data/portfolioData";
 import "../styles/ContactSection.css";
 
-const RECIPIENT_EMAIL = "imalbandara624@gmail.com";
+const RECIPIENT_EMAIL = "projects@irsolutions.company";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
-  const [status, setStatus] = useState({ type: "", message: "" });
+  const [status, setStatus] = useState({ type: "", message: "", needsActivation: false, showFallback: false });
   const [copied, setCopied] = useState(false);
+  const [copiedMsg, setCopiedMsg] = useState(false);
+
+  // Listen for prefill subject events from project explore modal or other triggers
+  useEffect(() => {
+    const handlePrefill = (e) => {
+      if (e.detail?.subject) {
+        setForm((prev) => ({ ...prev, subject: e.detail.subject }));
+      }
+    };
+    window.addEventListener("prefill-contact-subject", handlePrefill);
+    return () => window.removeEventListener("prefill-contact-subject", handlePrefill);
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,17 +43,33 @@ export default function ContactSection() {
     setTimeout(() => setCopied(false), 2200);
   };
 
+  // Pre-formatted mailto and Gmail Web links for 100% guaranteed delivery
+  const encodedSubject = encodeURIComponent(form.subject || `Portfolio Inquiry from ${form.name || "Client"}`);
+  const encodedBody = encodeURIComponent(
+    `Hello Imal,\n\n${form.message || "[Your message here]"}\n\nSender: ${form.name || "N/A"}\nEmail: ${form.email || "N/A"}`
+  );
+  const mailToUrl = `mailto:${RECIPIENT_EMAIL}?subject=${encodedSubject}&body=${encodedBody}`;
+  const gmailWebUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${RECIPIENT_EMAIL}&su=${encodedSubject}&body=${encodedBody}`;
+
+  const handleCopyFormattedMsg = () => {
+    const text = `To: ${RECIPIENT_EMAIL}\nSubject: ${form.subject || "Portfolio Contact Inquiry"}\nFrom: ${form.name} (${form.email})\n\n${form.message}`;
+    navigator.clipboard.writeText(text);
+    setCopiedMsg(true);
+    setTimeout(() => setCopiedMsg(false), 2200);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      setStatus({ type: "error", message: "Please fill out all required fields." });
+      setStatus({ type: "error", message: "Please fill out all required fields.", showFallback: false });
       return;
     }
 
     setSubmitting(true);
-    setStatus({ type: "", message: "" });
+    setStatus({ type: "", message: "", showFallback: false, needsActivation: false });
 
     try {
+      // 1. Submit to FormSubmit with explicit AJAX parameters
       const response = await fetch(`https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`, {
         method: "POST",
         headers: {
@@ -49,10 +77,12 @@ export default function ContactSection() {
           Accept: "application/json"
         },
         body: JSON.stringify({
-          Name: form.name,
-          Email: form.email,
-          Subject: form.subject || "Portfolio Contact Inquiry",
-          Message: form.message
+          name: form.name,
+          email: form.email,
+          _subject: form.subject || `Portfolio Inquiry from ${form.name}`,
+          message: form.message,
+          _captcha: "false",
+          _template: "table"
         })
       });
 
@@ -61,17 +91,28 @@ export default function ContactSection() {
       if (response.ok && (result.success === "true" || result.success === true)) {
         setStatus({
           type: "success",
-          message: "Message received! Thank you for getting in touch. I will reply to your email promptly."
+          message: "Message dispatched successfully! Thank you for getting in touch. I will reply to your email promptly.",
+          showFallback: false
         });
         setForm({ name: "", email: "", subject: "", message: "" });
+      } else if (result.message && (result.message.toLowerCase().includes("activate") || result.message.toLowerCase().includes("activation"))) {
+        // FormSubmit requires the owner to click the confirmation link sent to imalbandara624@gmail.com
+        setStatus({
+          type: "warning",
+          needsActivation: true,
+          message: "FormSubmit requires one-time email activation. A confirmation link was sent to imalbandara624@gmail.com. Please check your inbox and click activate to enable automated form delivery! In the meantime, use the 1-click mail button below:",
+          showFallback: true
+        });
       } else {
-        throw new Error(result.message || "Failed to deliver dispatch.");
+        throw new Error(result.message || "Third-party service error.");
       }
     } catch (err) {
-      console.error(err);
+      console.warn("Contact form submission error:", err);
+      // Fallback: If network failed, adblocker blocked formsubmit.co, or server error
       setStatus({
         type: "error",
-        message: "Dispatch transmission failed. Please email directly at " + RECIPIENT_EMAIL
+        message: "Direct web transmission was prevented (often due to browser ad-blockers or network restrictions). You can instantly dispatch your message using the 1-click email button below:",
+        showFallback: true
       });
     } finally {
       setSubmitting(false);
@@ -81,7 +122,7 @@ export default function ContactSection() {
   return (
     <section id="contact" className="contact-apple-section">
       <div className="contact-content-container">
-        
+
         {/* Section Header */}
         <div className="contact-header-block">
           <div className="contact-badge">
@@ -98,7 +139,7 @@ export default function ContactSection() {
 
         {/* Contact Layout Grid */}
         <div className="contact-layout-grid">
-          
+
           {/* Left Column: Form */}
           <div className="contact-form-card">
             <h3 className="form-card-title">Send a Direct Message</h3>
@@ -108,7 +149,37 @@ export default function ContactSection() {
 
             {status.message && (
               <div className={`status-feedback-banner ${status.type}`}>
-                <p>{status.message}</p>
+                <div className="status-banner-text">
+                  <p>{status.message}</p>
+                </div>
+                {status.showFallback && (
+                  <div className="status-fallback-actions">
+                    <a
+                      href={mailToUrl}
+                      className="fallback-btn primary-mail"
+                    >
+                      <Mail size={14} />
+                      <span>Send via Mail App</span>
+                    </a>
+                    <a
+                      href={gmailWebUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="fallback-btn secondary-mail"
+                    >
+                      <ArrowUpRight size={14} />
+                      <span>Open in Web Gmail</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={handleCopyFormattedMsg}
+                      className="fallback-btn tertiary-mail"
+                    >
+                      {copiedMsg ? <Check size={14} className="text-green" /> : <Copy size={14} />}
+                      <span>{copiedMsg ? "Copied to Clipboard!" : "Copy Full Message"}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -166,9 +237,9 @@ export default function ContactSection() {
                 />
               </div>
 
-              <button 
-                type="submit" 
-                className="form-transmit-btn" 
+              <button
+                type="submit"
+                className="form-transmit-btn"
                 disabled={submitting}
               >
                 <Send size={16} />
@@ -179,7 +250,7 @@ export default function ContactSection() {
 
           {/* Right Column: Cards & Social Links */}
           <div className="contact-channels-column">
-            
+
             {/* Quick Email Copy Card */}
             <div className="channel-glass-card email-card">
               <div className="channel-icon-circle">
@@ -192,8 +263,8 @@ export default function ContactSection() {
                 </a>
                 <p className="channel-sub-info">Typically reply within 24 hours.</p>
               </div>
-              <button 
-                className="channel-copy-btn" 
+              <button
+                className="channel-copy-btn"
                 onClick={handleCopyEmail}
                 aria-label="Copy email address"
               >
@@ -224,8 +295,8 @@ export default function ContactSection() {
                 <span className="channel-primary-val">Imal_Ravindu_CV.pdf</span>
                 <p className="channel-sub-info">Complete engineering history &amp; credentials.</p>
               </div>
-              <a 
-                href="/imal-cv.pdf" 
+              <a
+                href="/imal-cv.pdf"
                 download="Imal_Ravindu_CV.pdf"
                 className="channel-link-btn"
               >
@@ -236,9 +307,9 @@ export default function ContactSection() {
 
             {/* Social Channels */}
             <div className="social-links-grid">
-              <a 
-                href={PERSONAL_INFO.github} 
-                target="_blank" 
+              <a
+                href={PERSONAL_INFO.github}
+                target="_blank"
                 rel="noreferrer"
                 className="social-glass-tile"
               >
@@ -250,9 +321,9 @@ export default function ContactSection() {
                 <ArrowUpRight size={15} className="social-arrow" />
               </a>
 
-              <a 
-                href={PERSONAL_INFO.linkedin} 
-                target="_blank" 
+              <a
+                href={PERSONAL_INFO.linkedin}
+                target="_blank"
                 rel="noreferrer"
                 className="social-glass-tile"
               >

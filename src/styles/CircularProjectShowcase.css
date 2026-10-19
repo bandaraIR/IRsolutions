@@ -39,7 +39,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 40;
   will-change: transform, opacity, filter;
   pointer-events: all;
   padding: 0 16px;
@@ -187,7 +187,6 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  pointer-events: all;
   cursor: pointer;
   transition: opacity 0.3s ease, transform 0.25s ease;
   z-index: 10;
@@ -238,7 +237,7 @@
   align-items: center;
   justify-content: space-between;
   padding: clamp(75px, 10vh, 90px) 24px clamp(18px, 3vh, 32px);
-  z-index: 20;
+  z-index: 30;
   will-change: transform, opacity;
 }
 
@@ -326,14 +325,14 @@
   width: 100%;
   max-width: 1260px;
   /* Slightly taller stage to host larger prominent cards */
-  height: clamp(560px, 68vh, 680px);
+  height: clamp(540px, 64vh, 660px);
   display: flex;
   align-items: center;
   justify-content: center;
   perspective: 1200px;
   perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
-  z-index: 15;
+  transform-style: flat;
+  z-index: 25;
   margin: 6px 0;
 }
 
@@ -345,7 +344,7 @@
   max-width: clamp(720px, 58vw, 840px);
   border-radius: 38px;
   will-change: transform, opacity;
-  transform-style: preserve-3d;
+  transform-style: flat;
   cursor: pointer;
   outline: none;
   transition: box-shadow 0.35s ease, filter 0.35s ease;
@@ -353,6 +352,14 @@
 
 .circular-project-card.is-in-focus {
   cursor: default;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+/* Disable pointer events on buttons of non-focused background cards so they never block the active card */
+.circular-project-card:not(.is-in-focus) .card-actions-cluster,
+.circular-project-card:not(.is-in-focus) .btn-view-project {
+  pointer-events: none !important;
 }
 
 /* Outer Glow */
@@ -363,6 +370,7 @@
   background: linear-gradient(135deg, rgba(255, 106, 0, 0.45) 0%, transparent 50%, rgba(255, 255, 255, 0.08) 100%);
   opacity: 0.3;
   z-index: -1;
+  pointer-events: none;
   transition: opacity 0.35s ease, box-shadow 0.35s ease;
 }
 
@@ -373,6 +381,8 @@
 
 /* Shell Inner with Refined Spacing */
 .card-shell-inner {
+  position: relative;
+  z-index: 2;
   background: rgba(14, 14, 18, 0.88);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -511,13 +521,18 @@
 
 /* Action Buttons Cluster */
 .card-actions-cluster {
+  position: relative;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 12px;
   margin-top: 6px;
+  pointer-events: auto;
 }
 
 .btn-view-project {
+  position: relative;
+  z-index: 25;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -530,6 +545,15 @@
   box-shadow: 0 0 24px rgba(255, 106, 0, 0.38);
   transition: all 0.25s ease;
   min-height: 44px;
+  cursor: pointer;
+  border: none;
+  pointer-events: auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-view-project * {
+  pointer-events: none;
 }
 
 .btn-view-project:hover {
@@ -562,7 +586,7 @@
    ========================================== */
 .showcase-bottom-controls {
   position: relative;
-  z-index: 20;
+  z-index: 30;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -574,6 +598,7 @@
   border-radius: 999px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
   flex-shrink: 0;
+  margin-top: 8px;
 }
 
 .orbital-nav-arrow {
@@ -675,7 +700,7 @@
     padding: 0;
   }
   .projects-showcase-layer {
-    padding: 70px 14px 18px;
+    padding: 68px 12px 16px;
   }
   .showcase-top-header {
     margin-bottom: 2px;
@@ -683,51 +708,94 @@
   .showcase-subtext {
     display: none; /* Hide subtitle on small phones to save vertical space for the enlarged card */
   }
+  
+  /* Mobile SVG Optimization: Disable heavy animated multi-drop-shadows to ensure 60fps scrolling */
   .liquid-hello-svg {
-    max-width: 92vw;
+    max-width: 90vw;
+    animation: none !important;
+    filter: drop-shadow(0 0 24px rgba(255, 106, 0, 0.45));
   }
+  .ambient-orange-glow,
+  .showcase-ambient-aura {
+    filter: none !important;
+    background: radial-gradient(circle, rgba(255, 106, 0, 0.12) 0%, transparent 65%) !important;
+  }
+
   .circular-stage-3d {
-    height: clamp(510px, 69vh, 580px);
+    height: clamp(500px, 68vh, 570px);
     margin: 4px 0;
+    touch-action: pan-y;
   }
   .circular-project-card {
-    max-width: min(94vw, 470px);
+    max-width: min(94vw, 460px);
     width: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: flat; /* Flattens 3D hierarchy for maximum mobile rendering speed */
   }
+  .card-outer-glow {
+    /* Lighter border glow on mobile */
+    box-shadow: none !important;
+  }
+  .circular-project-card.is-in-focus .card-outer-glow {
+    box-shadow: 0 0 25px rgba(255, 106, 0, 0.28) !important;
+  }
+
+  /* Replace heavy 28px backdrop blur with lightweight 6px blur and dark solid backing */
   .card-shell-inner {
-    padding: 18px 18px 20px;
-    gap: 12px;
-    border-radius: 30px;
+    padding: 16px 16px 18px;
+    gap: 10px;
+    border-radius: 26px;
+    background: rgba(14, 14, 18, 0.95) !important;
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8) !important;
   }
+
+  /* CRITICAL MOBILE PERF: Disable the 30px blurred backdrop image on all cards to save mobile GPU bandwidth */
+  .card-project-img-backdrop {
+    display: none !important;
+  }
+
   .card-visual-container {
-    height: clamp(190px, 26vh, 235px);
-    border-radius: 18px;
+    height: clamp(180px, 25vh, 220px);
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 106, 0, 0.08) 0%, #07070b 80%) !important;
   }
+  .card-project-img {
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.6)) !important;
+  }
+  .card-img-ambient-vignette {
+    display: none;
+  }
+
   .card-project-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
+    line-height: 1.25;
   }
   .card-project-desc {
-    font-size: 0.86rem;
-    line-height: 1.5;
-    -webkit-line-clamp: 3;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    -webkit-line-clamp: 2;
   }
   .card-actions-cluster {
     width: 100%;
+    margin-top: 2px;
   }
   .btn-view-project {
     width: 100%;
     justify-content: center;
-    padding: 11px 16px;
-    font-size: 0.88rem;
-    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 0.86rem;
+    min-height: 42px;
   }
   .showcase-bottom-controls {
     padding: 6px 12px;
     gap: 8px;
   }
   .orbital-nav-arrow {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
   }
   .dot-title-tooltip {
     display: none; /* Avoid tooltip overlay collision on small touch screens */
@@ -737,16 +805,16 @@
 /* Extra Small Phones */
 @media (max-width: 380px) {
   .circular-stage-3d {
-    height: 480px;
+    height: 470px;
   }
   .card-visual-container {
-    height: 165px;
+    height: 160px;
   }
   .card-project-title {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
   .btn-view-project {
-    min-height: 40px;
-    font-size: 0.82rem;
+    min-height: 38px;
+    font-size: 0.8rem;
   }
 }

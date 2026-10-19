@@ -52,7 +52,9 @@ export const PROJECTS_DATA = [
       "Alerts for abnormal environmental conditions",
       "Periodic data export for reporting"
     ],
-    impact: "Provides facility managers with round-the-clock environmental awareness, eliminating manual logging and mitigating operational risks before threshold breaches impact facility operations."
+    impact: "Provides facility managers with round-the-clock environmental awareness, eliminating manual logging and mitigating operational risks before threshold breaches impact facility operations.",
+    techStack: ["IoT Sensor Grid", "Real-Time Telemetry", "Automated Data Logging", "Threshold Alerts Engine", "CSV/PDF Export"],
+    tags: ["Industrial IoT", "Enterprise", "Monitoring"]
   },
   {
     id: 2,
@@ -79,7 +81,9 @@ export const PROJECTS_DATA = [
       "Improved driver awareness",
       "Enhanced traffic safety within industrial premises"
     ],
-    impact: "Significantly decreases speeding incidents across active industrial thoroughfares, establishing a disciplined traffic environment that safeguards workers and visitors."
+    impact: "Significantly decreases speeding incidents across active industrial thoroughfares, establishing a disciplined traffic environment that safeguards workers and visitors.",
+    techStack: ["Radar / Sensor Interfacing", "Speed Tracking Algorithm", "LED Driver Feedback Display", "Industrial Threshold Logic"],
+    tags: ["Traffic Safety", "Enterprise", "Hardware Integration"]
   },
   {
     id: 3,
@@ -107,7 +111,9 @@ export const PROJECTS_DATA = [
       "Improved awareness of forklift blind spots",
       "Enhanced workplace safety"
     ],
-    impact: "Creates an active safety shield around heavy material handling machinery, preventing catastrophic workplace injuries and cultivating an accident-free warehouse environment."
+    impact: "Creates an active safety shield around heavy material handling machinery, preventing catastrophic workplace injuries and cultivating an accident-free warehouse environment.",
+    techStack: ["Computer Vision", "Perimeter Intrusion Detection", "Audio-Visual Signaling", "Industrial Embedded Systems"],
+    tags: ["AI & Vision", "Industrial Safety", "Enterprise"]
   },
   {
     id: 4,
@@ -135,7 +141,9 @@ export const PROJECTS_DATA = [
       "Reduced manual intervention",
       "More efficient vehicle access management"
     ],
-    impact: "Optimizes vehicular transit speed while reinforcing facility security protocols with precise, tamper-proof electronic vehicle logs."
+    impact: "Optimizes vehicular transit speed while reinforcing facility security protocols with precise, tamper-proof electronic vehicle logs.",
+    techStack: ["ANPR / ALPR Recognition", "Barrier Gate PLC/Relay Control", "Employee Vehicle Database", "Automated Security Logs"],
+    tags: ["Access Automation", "Computer Vision", "Enterprise"]
   },
   {
     id: 5,
@@ -163,7 +171,9 @@ export const PROJECTS_DATA = [
       "Assistance with warranty arrangements",
       "Support for industrial and business requirements"
     ],
-    impact: "Delivers substantial cost savings and eliminates purchasing uncertainties, providing corporate clients with dependable, specification-verified industrial solutions."
+    impact: "Delivers substantial cost savings and eliminates purchasing uncertainties, providing corporate clients with dependable, specification-verified industrial solutions.",
+    techStack: ["Technical Specification Analysis", "Global Supplier Coordination", "Cost & Quotation Optimization", "Warranty & Compliance Review"],
+    tags: ["Technology Sourcing", "Consulting", "Industrial Hardware"]
   },
   {
     id: 6,
@@ -192,7 +202,9 @@ export const PROJECTS_DATA = [
       "Administrative dashboard for managing products and orders",
       "Google authentication support"
     ],
-    impact: "Delivers a convenient online shopping experience while simplifying product and order management for the business."
+    impact: "Delivers a convenient online shopping experience while simplifying product and order management for the business.",
+    techStack: ["React", "Node.js", "Express", "RESTful API", "Google OAuth", "Cloud Storage"],
+    tags: ["E-Commerce", "Full Stack Web", "Commercial"]
   },
   {
     id: 7,
@@ -222,7 +234,9 @@ export const PROJECTS_DATA = [
       "Police officer access and fine management",
       "Administrative user approval and access management"
     ],
-    impact: "Improves traffic law enforcement, supports more efficient fine management, and promotes safer driving through an integrated traffic monitoring solution."
+    impact: "Improves traffic law enforcement, supports more efficient fine management, and promotes safer driving through an integrated traffic monitoring solution.",
+    techStack: ["Python", "YOLOv8", "OpenCV", "EasyOCR", "Flutter (Mobile)", "Node.js", "Firebase"],
+    tags: ["AI & Vision", "Flutter Mobile", "Capstone"]
   }
 ];
 
