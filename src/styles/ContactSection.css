@@ -69,6 +69,11 @@
   align-items: start;
 }
 
+/* FIX: grid items must be allowed to shrink below their content width */
+.contact-layout-grid > * {
+  min-width: 0;
+}
+
 /* Form Card */
 .contact-form-card {
   background: #FFFFFF;
@@ -194,6 +199,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .form-field-label {
@@ -215,6 +221,9 @@
   font-family: inherit;
   outline: none;
   transition: all 0.2s ease;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .apple-styled-form input:focus,
@@ -264,6 +273,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
 }
 
 .channel-glass-card {
@@ -276,6 +286,7 @@
   gap: 16px;
   box-shadow: 0 6px 20px rgba(11, 25, 44, 0.04);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
 }
 
 .channel-glass-card:hover {
@@ -299,6 +310,7 @@
 
 .channel-card-body {
   flex: 1;
+  min-width: 0;                /* FIX: lets long text shrink/wrap inside flex */
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -317,6 +329,7 @@
   font-weight: 700;
   color: #0B192C;
   text-decoration: none;
+  overflow-wrap: anywhere;     /* FIX: long email / filename wraps */
 }
 
 .channel-primary-val:hover {
@@ -342,6 +355,8 @@
   font-weight: 600;
   transition: all 0.2s ease;
   cursor: pointer;
+  flex-shrink: 0;              /* FIX: button never gets squashed */
+  text-decoration: none;
 }
 
 .channel-copy-btn:hover,
@@ -373,6 +388,7 @@
   color: #0B192C;
   box-shadow: 0 4px 14px rgba(11, 25, 44, 0.03);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
 }
 
 .social-glass-tile:hover {
@@ -384,6 +400,7 @@
 
 .social-tile-text {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
@@ -401,10 +418,12 @@
 .social-handle {
   font-size: 0.76rem;
   color: #64748B;
+  overflow-wrap: anywhere;
 }
 
 .social-arrow {
   color: #94A3B8;
+  flex-shrink: 0;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
@@ -412,6 +431,10 @@
   transform: translate(2px, -2px);
   color: #0066F5;
 }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
 
 @media (max-width: 900px) {
   .contact-layout-grid {
@@ -437,6 +460,16 @@
   .channel-glass-card {
     padding: 16px;
     border-radius: 18px;
+    flex-wrap: wrap;             /* button drops to its own row */
+    align-items: flex-start;
+  }
+  .channel-card-body {
+    flex: 1 1 calc(100% - 62px); /* icon (46px) + gap (16px) */
+  }
+  .channel-copy-btn,
+  .channel-link-btn {
+    width: 100%;
+    justify-content: center;
   }
   .form-transmit-btn {
     min-height: 48px;
