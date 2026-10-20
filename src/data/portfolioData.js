@@ -9,8 +9,8 @@ import yoloImg from "../assets/projects/yolo.png";
 export const PERSONAL_INFO = {
   fullName: "Liyana Waduge Imal Ravindu Bandara",
   shortName: "Imal Ravindu",
-  role: "Full Stack Software Engineer & Mobile Developer",
-  tagline: "Engineering immersive digital experiences with architectural precision.",
+  role: "Industrial Automation & IoT Systems Engineer",
+  tagline: "Engineering robust industrial automation, IoT telemetry monitoring, and AI-powered safety solutions.",
   location: "Colombo, Sri Lanka",
   email: "imalbandara624@gmail.com",
   github: "https://github.com/bandaraIR",
@@ -18,11 +18,11 @@ export const PERSONAL_INFO = {
   degree: "BSc (Hons) in Software Engineering",
   university: "NSBM Green University",
   graduationYear: "2026",
-  status: "Available for hire & immediate opportunities",
+  status: "Available for enterprise deployments & industrial commissions",
   bio: [
-    "I am a freshly graduated Software Engineer from NSBM Green University with a BSc (Hons) in Software Engineering and a passion for engineering high-performance software that feels intuitive and refined.",
-    "Specializing in the intersection of modern web architectures (React, Next.js, Node.js), cross-platform mobile engineering with Flutter, and computer vision / AI systems.",
-    "Driven by Apple-level attention to detail, smooth interaction design, and reliable backend engineering."
+    "Specialized in industrial automation systems, enterprise IoT telemetry, and AI-powered workplace safety engineering.",
+    "Experienced in deploying real-time environmental monitoring grids, automated barrier gate controllers, vehicle speed radar systems, and forklift blind-spot pedestrian safety nets.",
+    "Backed by comprehensive software engineering fundamentals across cloud dashboards and cross-platform mobile telemetry apps for seamless hardware-to-cloud integration."
   ]
 };
 
@@ -177,66 +177,59 @@ export const PROJECTS_DATA = [
   },
   {
     id: 6,
-    title: "AURI – E-Commerce Platform",
-    subtitle: "A modern e-commerce platform designed to provide customers with a smooth and convenient online shopping experience.",
-    category: "E-Commerce Platform",
-    year: "Commercial Platform",
+    title: "SafeRoad – AI-Powered Red-Light Violation Detection & Traffic Management",
+    subtitle: "An automated traffic violation detection and fine management solution developed to improve road safety through computer vision.",
+    category: "Traffic Safety & Computer Vision",
+    year: "Enterprise / Capstone",
     status: "Operational",
-    image: auriImg,
-    overview: "AURI is a modern e-commerce platform designed to provide customers with a smooth and convenient online shopping experience. The platform allows customers to explore products, view product details, add items to their shopping cart, and place orders online.\n\nThe platform also includes an administrative interface for managing products, product images, and customer orders. It supports multiple payment methods, including bank transfers and cash on delivery, providing customers with flexible purchasing options.",
-    purpose: "Deliver a convenient online shopping experience while simplifying product and order management for the business.",
+    image: yoloImg,
+    overview: "SafeRoad is an intelligent road safety solution developed to automate vehicle monitoring, speed tracking, red-light compliance, and automated traffic management.\n\nThe system identifies vehicles that cross designated safety zones, captures vehicle registration numbers via OCR, and records detected violations for instant operational processing.",
+    purpose: "Improve facility and roadway safety enforcement through automated computer vision, vehicle tracking, and real-time electronic processing.",
     benefits: [
-      "Smooth and convenient online shopping experience for customers",
-      "Flexible purchasing options with multiple payment methods",
-      "Streamlined product catalog and imagery administration",
-      "Convenient order tracking and management workflows",
-      "Secure and frictionless user authentication"
+      "Automated identification of vehicles violating safety rules and red signals",
+      "Accurate vehicle registration number recognition with captured image evidence",
+      "Centralized incident logs and electronic case management",
+      "Real-time processing for quick law enforcement and administrative oversight",
+      "Demonstrated reduction in reckless vehicular maneuvers and speed infractions"
     ],
     features: [
-      "Modern and responsive online shopping experience",
-      "Product browsing and detailed product views",
-      "Shopping cart functionality",
-      "Online order placement and order management",
-      "Bank transfer and cash-on-delivery payment options",
-      "Product and image management",
-      "Administrative dashboard for managing products and orders",
-      "Google authentication support"
+      "Automated vehicle violation detection",
+      "Real-time vehicle number plate recognition (ANPR)",
+      "Safety-line intrusion surveillance",
+      "Image and telemetry evidence recording",
+      "Administrative monitoring dashboard",
+      "Mobile alert and status notification support"
     ],
-    impact: "Delivers a convenient online shopping experience while simplifying product and order management for the business.",
-    techStack: ["React", "Node.js", "Express", "RESTful API", "Google OAuth", "Cloud Storage"],
-    tags: ["E-Commerce", "Full Stack Web", "Commercial"]
+    impact: "Enhances roadway and facility traffic enforcement, supporting disciplined driving and accident reduction across controlled premises.",
+    techStack: ["Python", "YOLOv8", "OpenCV", "EasyOCR", "Flutter (Mobile)", "Node.js", "Firebase"],
+    tags: ["AI & Vision", "Vehicle Detection", "Safety Systems"]
   },
   {
     id: 7,
-    title: "SafeRoad – AI-Powered Red-Light Violation Detection and Automated Fine Management System",
-    subtitle: "An automated traffic violation detection and fine management solution developed to improve road safety.",
-    category: "Traffic Safety & Fine Management",
-    year: "Final-Year Project",
+    title: "AURI – E-Commerce Platform",
+    subtitle: "A modern commercial web application with cloud product cataloging, order workflows, and administrative dashboards.",
+    category: "Full-Stack Web Development",
+    year: "Commercial Platform",
     status: "Operational",
-    image: yoloImg,
-    overview: "SafeRoad is my final-year software engineering project, developed to improve road safety through automated traffic violation detection and fine management.\n\nThe system identifies vehicles that cross a designated stop line while the traffic light is red. It captures relevant vehicle information, recognizes vehicle registration numbers, and records detected violations for further processing.\n\nThe platform also provides dedicated interfaces for vehicle owners, police officers, and administrators. Vehicle owners can review their fines and access available payment and appeal options. Police officers can manage fines and review appeals, while administrators oversee the system’s user access and approval processes.",
-    purpose: "Improve traffic law enforcement, support more efficient fine management, and promote safer driving through an integrated traffic monitoring solution.",
+    image: auriImg,
+    overview: "AURI is a modern full-stack web e-commerce platform designed to demonstrate robust digital product management, online order placement, and seamless transaction workflows.\n\nThe system features an administrative dashboard for inventory, orders, and payment tracking, showcasing full-stack web and cloud backend integration capabilities.",
+    purpose: "Provide a seamless online shopping experience while illustrating robust full-stack software and cloud architecture.",
     benefits: [
-      "Automated identification of vehicles crossing the stop line during a red signal",
-      "Accurate vehicle registration number recognition with captured evidence",
-      "Transparent fine management, online payment, and appeal workflows for vehicle owners",
-      "Centralized case management and appeal reviews for police officers",
-      "Comprehensive administrative governance over user approvals and access"
+      "Smooth, responsive user experience across desktop and mobile devices",
+      "Flexible multi-method payment workflows",
+      "Streamlined administrative product and inventory management",
+      "Centralized order fulfillment tracking"
     ],
     features: [
-      "Automated red-light violation detection",
-      "Vehicle number plate recognition",
-      "Detection of vehicles crossing the stop line during a red signal",
-      "Violation records with supporting evidence",
-      "Fine management and tracking",
-      "Vehicle owner accounts for reviewing fines",
-      "Online fine payment and appeal workflows",
-      "Police officer access and fine management",
-      "Administrative user approval and access management"
+      "Modern responsive web application",
+      "Product browsing and detail management",
+      "Shopping cart and checkout workflows",
+      "Admin dashboard with telemetry and sales reports",
+      "Secure Google OAuth authentication"
     ],
-    impact: "Improves traffic law enforcement, supports more efficient fine management, and promotes safer driving through an integrated traffic monitoring solution.",
-    techStack: ["Python", "YOLOv8", "OpenCV", "EasyOCR", "Flutter (Mobile)", "Node.js", "Firebase"],
-    tags: ["AI & Vision", "Flutter Mobile", "Capstone"]
+    impact: "Showcases complementary web and cloud software architecture that interfaces with enterprise systems.",
+    techStack: ["React", "Node.js", "Express", "REST API", "Google OAuth", "Cloud Storage"],
+    tags: ["Web Systems", "Cloud Architecture", "Secondary Focus"]
   }
 ];
 

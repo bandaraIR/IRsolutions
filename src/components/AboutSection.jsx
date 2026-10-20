@@ -214,10 +214,10 @@ export default function AboutSection() {
               <h3 className="horiz-card-title">Engineering Ethos</h3>
             </div>
             <p className="horiz-card-text">
-              I am Imal Ravindu — an engineer from Colombo, Sri Lanka, driven by the belief that code should never simply work, but feel effortless to those who interact with it.
+              I am Imal Ravindu — an engineer from Colombo, Sri Lanka, focused on engineering robust industrial automation systems, enterprise IoT telemetry grids, and AI-powered safety solutions.
             </p>
             <p className="horiz-card-text">
-              Comfortably bridging full-scale web architectures, responsive Flutter applications, and real-time machine-learning systems.
+              Seamlessly integrating industrial sensors, automated barrier controllers, and computer vision safety nets with modern cloud dashboards and mobile telemetry apps.
             </p>
           </div>
 
@@ -246,12 +246,12 @@ export default function AboutSection() {
               <h3 className="horiz-card-title">Status &amp; Availability</h3>
             </div>
             <p className="horiz-card-text">
-              Actively seeking my first professional role — open to full-time software engineering positions, high-impact remote teams, and selective freelance commissions.
+              Open to enterprise industrial deployments, automation commissions, and high-impact engineering opportunities.
             </p>
             <div className="horiz-goals-ribbon">
-              <span className="horiz-goal-chip">Full-Time Role</span>
-              <span className="horiz-goal-chip">Remote Global Teams</span>
-              <span className="horiz-goal-chip">Open for Hire</span>
+              <span className="horiz-goal-chip">Industrial Automation</span>
+              <span className="horiz-goal-chip">IoT Monitoring Grids</span>
+              <span className="horiz-goal-chip">Available for Deployments</span>
             </div>
           </div>
 

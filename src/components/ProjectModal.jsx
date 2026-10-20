@@ -99,35 +99,40 @@ export default function ProjectModal({
           {/* Quick Prev / Next Switchers & Close */}
           <div className="modal-header-controls">
             {allProjects.length > 1 && (
-              <div className="modal-nav-arrows">
+              <div className="modal-header-nav-group">
                 <button
-                  className="modal-arrow-btn"
+                  type="button"
+                  className="modal-nav-btn prev"
                   onClick={() => prevProject && onSelectProject(prevProject)}
                   disabled={!prevProject}
                   aria-label="Previous project"
                   title={prevProject ? `Previous: ${prevProject.title}` : "First project"}
                 >
-                  <ChevronLeft size={18} />
+                  <ChevronLeft size={16} />
+                  <span className="nav-btn-text">Prev Project</span>
                 </button>
                 <button
-                  className="modal-arrow-btn"
+                  type="button"
+                  className="modal-nav-btn next"
                   onClick={() => nextProject && onSelectProject(nextProject)}
                   disabled={!nextProject}
                   aria-label="Next project"
                   title={nextProject ? `Next: ${nextProject.title}` : "Last project"}
                 >
-                  <ChevronRight size={18} />
+                  <span className="nav-btn-text">Next Project</span>
+                  <ChevronRight size={16} />
                 </button>
               </div>
             )}
 
             <button 
+              type="button"
               className="modal-close-btn"
               onClick={onClose}
               aria-label="Close modal"
               title="Close (Esc)"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         </div>
@@ -302,10 +307,14 @@ export default function ProjectModal({
             <div className="modal-footer-nav-grid">
               {prevProject ? (
                 <button
+                  type="button"
                   className="footer-nav-card prev"
                   onClick={() => onSelectProject(prevProject)}
+                  aria-label={`Go to previous project: ${prevProject.title}`}
                 >
-                  <ArrowLeft size={16} className="footer-nav-arrow" />
+                  <div className="nav-card-icon-frame">
+                    <ArrowLeft size={18} />
+                  </div>
                   <div className="footer-nav-text">
                     <span className="footer-nav-direction">Previous Project</span>
                     <span className="footer-nav-title">{prevProject.title}</span>
@@ -315,14 +324,18 @@ export default function ProjectModal({
 
               {nextProject ? (
                 <button
+                  type="button"
                   className="footer-nav-card next"
                   onClick={() => onSelectProject(nextProject)}
+                  aria-label={`Go to next project: ${nextProject.title}`}
                 >
                   <div className="footer-nav-text">
                     <span className="footer-nav-direction">Next Project</span>
                     <span className="footer-nav-title">{nextProject.title}</span>
                   </div>
-                  <ArrowRight size={16} className="footer-nav-arrow" />
+                  <div className="nav-card-icon-frame">
+                    <ArrowRight size={18} />
+                  </div>
                 </button>
               ) : <div className="footer-nav-placeholder" />}
             </div>

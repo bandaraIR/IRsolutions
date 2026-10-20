@@ -1,10 +1,11 @@
 /* ==========================================================================
-   Apple-Inspired Dark Portfolio Footer
+   IR Solutions — Modern Light Portfolio Footer
+   Clean White Background with High-Tech Slate & Royal Blue Accents
    ========================================================================== */
 
 .apple-portfolio-footer {
-  background: #000000;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
   padding: 60px 24px 40px;
   width: 100%;
 }
@@ -32,34 +33,38 @@
 .footer-monogram {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--accent-orange);
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+  color: #0066F5;
 }
 
 .footer-name {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #FFFFFF;
+  color: #0B192C;
 }
 
 .footer-back-to-top {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-gray-400);
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #334155;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .footer-back-to-top:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.12);
+  background: #0066F5;
+  border-color: #0066F5;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 245, 0.25);
 }
 
 .footer-middle-row {
@@ -69,34 +74,37 @@
   flex-wrap: wrap;
   gap: 16px;
   padding: 18px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid #F1F5F9;
+  border-bottom: 1px solid #F1F5F9;
 }
 
 .footer-tagline {
-  font-size: 0.88rem;
-  color: var(--text-gray-400);
+  font-size: 0.9rem;
+  color: #64748B;
   max-width: 600px;
+  line-height: 1.5;
 }
 
 .footer-tech-stack-note {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.78rem;
-  color: var(--text-gray-600);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
 }
 
 .footer-tech-stack-note .sep {
-  color: var(--accent-orange);
+  color: #0066F5;
+  font-weight: 700;
 }
 
 .footer-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.78rem;
-  color: var(--text-gray-600);
+  font-size: 0.8rem;
+  color: #64748B;
   flex-wrap: wrap;
   gap: 10px;
 }

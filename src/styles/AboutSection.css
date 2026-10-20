@@ -1,12 +1,12 @@
 /* ==========================================================================
-   Apple-Inspired About & AI Correspondent Styles
-   Centered AI Tab with Horizontal Text Deck Underneath
+   IR Solutions — About Section Styles
+   Modern White Tech Aesthetic with Electric Royal Blue Highlights
    ========================================================================== */
 
 .about-apple-section {
   position: relative;
-  background-color: #000000;
-  padding: 120px 24px;
+  background-color: #FFFFFF;
+  padding: 110px 24px;
   width: 100%;
 }
 
@@ -33,19 +33,19 @@
   align-items: center;
   gap: 6px;
   padding: 5px 14px;
-  border-radius: 999px;
-  background: rgba(255, 106, 0, 0.08);
-  border: 1px solid rgba(255, 106, 0, 0.25);
+  border-radius: 9999px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
   font-size: 0.74rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #FFA559;
+  color: #0066F5;
   margin-bottom: 1rem;
 }
 
 .badge-compass {
-  color: var(--accent-orange);
+  color: #0066F5;
 }
 
 .about-section-headline {
@@ -53,15 +53,22 @@
   font-size: clamp(2.2rem, 4vw, 3.4rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  color: #FFFFFF;
-  line-height: 1.12;
+  color: #0B192C;
+  line-height: 1.15;
   margin-bottom: 1rem;
+}
+
+.text-orange-glow {
+  color: #0066F5;
+  background: linear-gradient(135deg, #0066F5 0%, #0EA5E9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .about-section-subtext {
   font-size: 1.02rem;
   line-height: 1.6;
-  color: var(--text-gray-400);
+  color: #475569;
 }
 
 /* ==========================================
@@ -74,12 +81,10 @@
 }
 
 .ai-chat-glass-terminal {
-  background: rgba(14, 14, 18, 0.82);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
   border-radius: 28px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(255, 106, 0, 0.1);
+  box-shadow: 0 20px 50px rgba(11, 25, 44, 0.08), 0 2px 10px rgba(0, 102, 245, 0.05);
   display: flex;
   flex-direction: column;
   height: 560px;
@@ -91,8 +96,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  background: rgba(22, 22, 28, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
 }
 
 .terminal-traffic-lights {
@@ -115,23 +120,24 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #FFFFFF;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0B192C;
 }
 
 .bot-icon {
-  color: var(--accent-orange);
+  color: #0066F5;
 }
 
 .terminal-live-badge {
   font-size: 0.68rem;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: rgba(48, 209, 88, 0.15);
-  color: #30D158;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: #DCFCE7;
+  color: #16A34A;
   font-weight: 700;
   text-transform: uppercase;
+  border: 1px solid #86EFAC;
 }
 
 /* Messages Feed */
@@ -142,6 +148,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: #FFFFFF;
 }
 
 .ai-chat-bubble {
@@ -164,19 +171,22 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
   flex-shrink: 0;
 }
 
 .ai-chat-bubble.assistant .bubble-avatar {
-  background: rgba(255, 106, 0, 0.15);
-  border-color: rgba(255, 106, 0, 0.3);
-  color: var(--accent-orange);
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #0066F5;
+}
+
+.ai-chat-bubble.user .bubble-avatar {
+  background: #0066F5;
+  color: #FFFFFF;
+  border: 1px solid #0052CC;
 }
 
 .bubble-body {
@@ -188,40 +198,42 @@
 .bubble-sender-name {
   font-size: 0.72rem;
   font-weight: 600;
-  color: var(--text-gray-600);
+  color: #64748B;
 }
 
 .ai-chat-bubble.user .bubble-sender-name {
   text-align: right;
+  color: #0066F5;
 }
 
 .bubble-text {
-  font-size: 0.88rem;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  line-height: 1.55;
   padding: 12px 16px;
   border-radius: 18px;
 }
 
 .ai-chat-bubble.assistant .bubble-text {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-gray-300);
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
   border-top-left-radius: 4px;
 }
 
 .ai-chat-bubble.user .bubble-text {
-  background: linear-gradient(135deg, #FF6A00 0%, #FF852E 100%);
-  color: #000000;
+  background: linear-gradient(135deg, #0066F5 0%, #1668E3 100%);
+  color: #FFFFFF;
   font-weight: 500;
   border-top-right-radius: 4px;
-  box-shadow: 0 4px 15px rgba(255, 106, 0, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 102, 245, 0.25);
 }
 
 .bubble-typing {
   font-size: 0.84rem;
-  color: var(--text-gray-400);
+  color: #64748B;
   padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.04);
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
   border-radius: 14px;
   display: inline-block;
 }
@@ -246,7 +258,8 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid #E2E8F0;
+  background: #F8FAFC;
   flex-shrink: 0;
 }
 
@@ -256,19 +269,22 @@
 
 .suggestion-pill {
   font-size: 0.74rem;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-gray-300);
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #475569;
   white-space: nowrap;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .suggestion-pill:hover:not(:disabled) {
-  background: rgba(255, 106, 0, 0.12);
-  border-color: rgba(255, 106, 0, 0.3);
-  color: #FFA559;
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: #0066F5;
+  transform: translateY(-1px);
 }
 
 /* Input Bar */
@@ -277,52 +293,56 @@
   align-items: center;
   gap: 10px;
   padding: 12px 16px;
-  background: rgba(18, 18, 24, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
   flex-shrink: 0;
 }
 
 .ai-text-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-size: 16px;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 9999px;
+  padding: 11px 18px;
+  font-size: 0.92rem;
+  color: #0B192C;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .ai-text-input:focus {
-  border-color: var(--accent-orange);
+  border-color: #0066F5;
+  box-shadow: 0 0 0 3px rgba(0, 102, 245, 0.15);
 }
 
 .ai-text-input::placeholder {
-  color: var(--text-gray-600);
+  color: #94A3B8;
 }
 
 .ai-send-btn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: var(--accent-orange);
-  color: #000000;
+  background: linear-gradient(135deg, #0066F5 0%, #1668E3 100%);
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 102, 245, 0.28);
 }
 
 .ai-send-btn:hover:not(:disabled) {
-  transform: scale(1.06);
-  filter: brightness(1.1);
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #0056D6 0%, #1059CA 100%);
+  box-shadow: 0 6px 16px rgba(0, 102, 245, 0.38);
 }
 
 .ai-send-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* ==========================================
@@ -338,40 +358,38 @@
 }
 
 .about-horiz-card {
-  background: rgba(14, 14, 18, 0.72);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
   border-radius: 24px;
-  padding: 26px 24px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 10px 30px rgba(11, 25, 44, 0.05);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .about-horiz-card:hover {
-  border-color: rgba(255, 106, 0, 0.32);
+  border-color: #BFDBFE;
   transform: translateY(-4px);
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 106, 0, 0.08);
+  box-shadow: 0 20px 45px rgba(0, 102, 245, 0.12), 0 2px 6px rgba(11, 25, 44, 0.04);
 }
 
 .horiz-card-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  padding-bottom: 10px;
+  border-bottom: 1px solid #F1F5F9;
+  padding-bottom: 12px;
 }
 
 .horiz-icon-pill {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(255, 106, 0, 0.1);
-  border: 1px solid rgba(255, 106, 0, 0.28);
-  color: var(--accent-orange);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #0066F5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,18 +400,18 @@
   font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #0B192C;
   letter-spacing: -0.015em;
 }
 
 .horiz-card-text {
   font-size: 0.9rem;
   line-height: 1.62;
-  color: var(--text-gray-400);
+  color: #475569;
 }
 
 .horiz-card-text strong {
-  color: #FFFFFF;
+  color: #0B192C;
   font-weight: 600;
 }
 
@@ -401,17 +419,17 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .horiz-goal-chip {
   font-size: 0.74rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255, 106, 0, 0.08);
-  border: 1px solid rgba(255, 106, 0, 0.25);
-  color: #FFA559;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: #0066F5;
 }
 
 /* Responsive */
@@ -427,12 +445,12 @@
 
 @media (max-width: 640px) {
   .about-apple-section {
-    padding: 90px 16px;
+    padding: 80px 16px;
   }
   .ai-chat-glass-terminal {
     height: 480px;
   }
   .about-horiz-card {
-    padding: 20px 18px;
+    padding: 22px 20px;
   }
 }
